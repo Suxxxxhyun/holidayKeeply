@@ -150,6 +150,37 @@ public Mono<List<Country>> getCountries() {
 - **장점**: 비동기 처리로 성능 향상, 백프레셔 지원
 - **확장성**: 스트림 처리, 에러 복구 등 고급 기능 활용 가능
 
+### 9. Fixture Monkey 기반 테스트 데이터 생성
+**Builder Pattern**을 활용한 유연한 테스트 데이터 생성:
+```java
+// FixtureMonkey 유틸리티 클래스
+public class FixtureMonkeyUtils {
+    private static final FixtureMonkey DEFAULT = FixtureMonkey.builder()
+        .objectIntrospector(FieldReflectionArbitraryIntrospector.INSTANCE)
+        .build();
+    
+    public static FixtureMonkey getDefault() {
+        return DEFAULT;
+    }
+}
+
+// 테스트에서 활용
+FixtureMonkey fixtureMonkey = FixtureMonkeyUtils.getDefault();
+
+// 기본 객체 생성
+Country country = fixtureMonkey.giveMeOne(Country.class);
+
+// Builder 패턴으로 특정 값 설정
+SearchCondition searchCondition = fixtureMonkey.giveMeBuilder(SearchCondition.class)
+    .set("startDate", LocalDate.of(2025, 1, 1))
+    .set("endDate", LocalDate.of(2025, 12, 31))
+    .set("countryName", "Germany")
+    .sample();
+```
+- **장점**: 반복적인 테스트 데이터 생성 코드 제거, 가독성 향상
+- **확장성**: 새로운 엔티티 추가 시 자동으로 테스트 데이터 생성 지원
+- **유지보수성**: 중앙화된 FixtureMonkey 설정으로 일관된 테스트 데이터 관리
+
 ## 📋 REST API 명세
 
 ### 기본 정보
