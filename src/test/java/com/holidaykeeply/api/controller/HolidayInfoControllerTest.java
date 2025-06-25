@@ -100,7 +100,7 @@ class HolidayInfoControllerTest {
 
 	@Test
 	@DisplayName("공휴일 데이터를 덮어쓰기한다.")
-	void testUpsert() throws Exception {
+	void upsert() throws Exception {
 		given(holidayInfoService.upsertHoliday(any(LocalDate.class), anyString()))
 				.willReturn(Mono.empty());
 
