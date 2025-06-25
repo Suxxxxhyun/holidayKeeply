@@ -1,0 +1,154 @@
+package com.holidaykeeply.domain.provider;
+
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.BDDMockito.*;
+
+import java.util.List;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import com.holidaykeeply.domain.entity.Country;
+import com.holidaykeeply.domain.infrastructure.repository.CountryRepository;
+import com.holidaykeeply.domain.provider.impl.CountryDbProvider;
+import com.holidaykeeply.fixture.FixtureMonkeyUtils;
+
+import reactor.core.publisher.Mono;
+
+import com.navercorp.fixturemonkey.FixtureMonkey;
+
+@ExtendWith(MockitoExtension.class)
+class CountryDbProviderTest {
+
+	@Mock
+	private CountryRepository countryRepository;
+
+	@InjectMocks
+	private CountryDbProvider countryDbProvider;
+
+	private final FixtureMonkey fixtureMonkey = FixtureMonkeyUtils.getDefault();
+
+	@Test
+	@DisplayName("데이터베이스에서 국가 목록을 성공적으로 가져온다.")
+	void getCountries_Success() {
+		// given
+		Country country1 = fixtureMonkey.giveMeBuilder(Country.class)
+			.set("countryCode", "KR")
+			.set("name", "South Korea")
+			.sample();
+		Country country2 = fixtureMonkey.giveMeBuilder(Country.class)
+			.set("countryCode", "JP")
+			.set("name", "Japan")
+			.sample();
+		Country country3 = fixtureMonkey.giveMeBuilder(Country.class)
+			.set("countryCode", "US")
+			.set("name", "United States")
+			.sample();
+
+		List<Country> expectedCountries = List.of(country1, country2, country3);
+
+		given(countryRepository.findAll()).willReturn(expectedCountries);
+
+		// when
+		Mono<List<Country>> result = countryDbProvider.getCountries();
+
+		// then
+		List<Country> actualCountries = result.block();
+		assertThat(actualCountries).isEqualTo(expectedCountries);
+
+		verify(countryRepository).findAll();
+	}
+
+	@Test
+	@DisplayName("빈 국가 목록을 반환한다.")
+	void getCountries_EmptyList() {
+		// given
+		List<Country> emptyList = List.of();
+		given(countryRepository.findAll()).willReturn(emptyList);
+
+		// when
+		Mono<List<Country>> result = countryDbProvider.getCountries();
+
+		// then
+		List<Country> actualCountries = result.block();
+		assertThat(actualCountries).isEmpty();
+
+		verify(countryRepository).findAll();
+	}
+
+	@Test
+	@DisplayName("단일 국가만 반환한다.")
+	void getCountries_SingleCountry() {
+		// given
+		Country country = fixtureMonkey.giveMeBuilder(Country.class)
+			.set("countryCode", "DE")
+			.set("name", "Germany")
+			.sample();
+
+		List<Country> singleCountryList = List.of(country);
+		given(countryRepository.findAll()).willReturn(singleCountryList);
+
+		// when
+		Mono<List<Country>> result = countryDbProvider.getCountries();
+
+		// then
+		List<Country> actualCountries = result.block();
+		assertThat(actualCountries).containsExactly(country);
+
+		verify(countryRepository).findAll();
+	}
+
+	@Test
+	@DisplayName("CountryRepository에서 에러가 발생하면 에러를 전파한다.")
+	void getCountries_Error() {
+		// given
+		RuntimeException error = new RuntimeException("Database Error");
+		given(countryRepository.findAll()).willThrow(error);
+
+		// when & then
+		assertThatThrownBy(() -> countryDbProvider.getCountries().block())
+			.isInstanceOf(RuntimeException.class)
+			.hasMessage("Database Error");
+
+		verify(countryRepository).findAll();
+	}
+
+	@Test
+	@DisplayName("여러 국가가 있는 경우 정상적으로 반환한다.")
+	void getCountries_MultipleCountries() {
+		// given
+		Country country1 = fixtureMonkey.giveMeBuilder(Country.class)
+			.set("countryCode", "FR")
+			.set("name", "France")
+			.sample();
+		Country country2 = fixtureMonkey.giveMeBuilder(Country.class)
+			.set("countryCode", "IT")
+			.set("name", "Italy")
+			.sample();
+		Country country3 = fixtureMonkey.giveMeBuilder(Country.class)
+			.set("countryCode", "ES")
+			.set("name", "Spain")
+			.sample();
+		Country country4 = fixtureMonkey.giveMeBuilder(Country.class)
+			.set("countryCode", "GB")
+			.set("name", "United Kingdom")
+			.sample();
+
+		List<Country> expectedCountries = List.of(country1, country2, country3, country4);
+
+		given(countryRepository.findAll()).willReturn(expectedCountries);
+
+		// when
+		Mono<List<Country>> result = countryDbProvider.getCountries();
+
+		// then
+		List<Country> actualCountries = result.block();
+		assertThat(actualCountries).isEqualTo(expectedCountries);
+
+		verify(countryRepository).findAll();
+	}
+} 
