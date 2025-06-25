@@ -1,0 +1,48 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:keeply;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop        # DB 초기화 전략
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true      # 쿼리 로그 포맷 (정렬)
+        show_sql: true        # 쿼리 로그 출력
+    defer-datasource-initialization: true # 엔터티 생성
+  task:
+    scheduling:
+      pool-size: 5
+      thread-name-prefix: "holiday-sync-"
+      await-termination-seconds: 60
+
+springdoc:
+  packages-to-scan: com.holidaykeeply
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  cache:
+    disabled: true              # 캐시 사용 여부, true => Swagger UI와 API 문서가 매 요청마다 새로 생성하여 최신 정보 반영
+  api-docs:
+    path: /api-docs
+    groups:
+      enabled: true
+  swagger-ui:
+    disable-swagger-default-url: true   #디폴트 페이지 안나오게
+    enabled: true               # Swagger UI 사용여부 : 접근 경로 => <http://localhost:8080/swagger-ui/index.html>
+    path: /demo-ui.html         # Swagger UI 추가 접근 경로 => <http://localhost:8080/demo-ui.html>
+    tags-sorter: alpha          # alpha: 알파벳 순 태그 정렬, method: HTTP Method 순 정렬
+    operations-sorter: alpha    # alpha: 알파벳 순 태그 정렬, method: HTTP Method 순 정렬
+  override-with-generic-response: false # 일반화된 응답 사용 여부 결정
+
+
+nager:
+  api:
+    base-url: "https://date.nager.at/api/v3"
+    available-countries-path: "/AvailableCountries"
+    public-holidays-path: "/PublicHolidays/{year}/{countryCode}"
+
+

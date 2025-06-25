@@ -1,0 +1,38 @@
+-- INSERT INTO country (id, country_code, name, created_time, last_modified_time) VALUES
+--                                                                                    (1, 'KR', 'South Korea', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+--                                                                                    (2, 'US', 'United States', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+--                                                                                    (3, 'JP', 'Japan', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+--                                                                                    (4, 'FR', 'France', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+--                                                                                    (5, 'DE', 'Germany', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+--
+--
+-- INSERT INTO holiday (
+--     fixed, global, holiday_year, country_id, created_time, last_modified_time, counties, launch_year, local_name, name
+-- ) VALUES (
+--              FALSE, TRUE, '2025-01-01', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, NULL, '새해', 'New Year''s Day'
+--          );
+--
+-- INSERT INTO holiday (
+--     fixed, global, holiday_year, country_id, created_time, last_modified_time, counties, launch_year, local_name, name
+-- ) VALUES (
+--              TRUE, TRUE, '2025-07-04', 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, '1776', 'Independence Day', 'Independence Day'
+--          );
+--
+-- INSERT INTO holiday (
+--     fixed, global, holiday_year, country_id, created_time, last_modified_time, counties, launch_year, local_name, name
+-- ) VALUES (
+--              TRUE, TRUE, '2025-02-11', 3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, '1966', '建国記念の日', 'National Foundation Day'
+--          );
+--
+-- INSERT INTO holiday (
+--     fixed, global, holiday_year, country_id, created_time, last_modified_time, counties, launch_year, local_name, name
+-- ) VALUES (
+--              FALSE, FALSE, '2025-07-14', 4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, NULL, 'Fête nationale', 'Bastille Day'
+--          );
+--
+-- INSERT INTO holiday (
+--     fixed, global, holiday_year, country_id, created_time, last_modified_time, counties, launch_year, local_name, name
+-- ) VALUES (
+--              FALSE, TRUE, '2025-10-03', 5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, NULL, 'Tag der Deutschen Einheit', 'German Unity Day'
+--          );
+
